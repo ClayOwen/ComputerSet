@@ -51,6 +51,18 @@ prefSet(){
  defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
 }
 
+
+
+echo "Do you want to customize the default  settings? [Y,n]"
+read input
+if [[ $input == "Y" || $input == "y" ]]; then
+        echo "changing the default  settings"
+        prefSet
+else
+        echo "Setting will be left on default "
+fi
+
+
 UAMDMCheck(){
 # This function checks if a Mac has user-approved MDM enabled.
 # If the UAMDMStatus variable returns "User Approved", then the
@@ -70,7 +82,15 @@ else
 fi
 }
 
-UAMDMCheck
+
+echo "Do you want to remove Mdm Profile? [Y,n]"
+read input
+if [[ $input == "Y" || $input == "y" ]]; then
+        echo "Changing the remove Mdm Profile "
+        UAMDMCheck & Check
+else
+        echo "Leaving existing MDM profiles"
+fi
 
 Check(){
 if [[ $noinst == "1" ]]; then
@@ -100,7 +120,6 @@ elif [[ $noinst == "0" ]]; then
 fi
 }
 
-
 appSet(){
   sudo rm -rif /Applications/Microsoft\ Excel.app /Applications/Microsoft\ OneNote.app /Applications/Microsoft\ Outlook.app /Applications/Microsoft\ PowerPoint.app /Applications/Microsoft\ Silverlight /Applications/Microsoft\ Word.app
   sudo rm -rif /Applications/Adobe\ Acrobat\ DC /Applications/Adobe\ Bridge\ CC\ 2018 /Applications/Adobe\ Creative\ Cloud /Applications/Adobe\ Illustrator\ CC\ 2018 /Applications/Adobe\ InDesign\ CC\ 2018 /Applications/Adobe\ Lightroom\ CC /Applications/Adobe\ Media\ Encoder\ CC\ 2018 /Applications/Adobe\ Photoshop\ CC\ 2018
@@ -113,9 +132,15 @@ appSet(){
   sudo mv "/Volumes/Conference/Atom.app" /Applications/
 }
 
-Check & prefSet
+echo "Do you want to install custom applications? [Y,n]"
+read input
+if [[ $input == "Y" || $input == "y" ]]; then
+        echo "Installing custom applications"
+        appSet
+else
+        echo "Leaving existing applications"
+fi
 
-appSet
 
 
 echo "Starting bootstrapping"
@@ -131,8 +156,6 @@ fi
 
 echo "Updating homebrew recipes"
 brew update
-
-
 # Install GNU `find`, `locate`, `updatedb`, and `xargs`, g-prefixed
 brew install findutils
 
@@ -142,23 +165,18 @@ brew install bash
 PACKAGES=(
 	wget
 	wine
-  	winetricks
+  winetricks
 	curl
 	pkg-config
 	python
-  	python3
+  python3
+  mas
 )
 
 echo "Installing packages..."
 brew install ${PACKAGES[@]}
 
-
 echo "Cleaning up..."
-brew cleanup
-
-echo "Installing cask..."
-brew install caskroom/cask
-
 brew cleanup
 
 osascript -e 'tell app "System Events" to log out'
