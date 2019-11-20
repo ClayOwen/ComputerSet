@@ -27,13 +27,13 @@ sudo fdesetup add -usertoadd $SHORTNAME
 
 
 
-echo "Do you want create a new user profile? [Y,n]"
+echo "Do you want create a new user? [Y,n]"
 read input
 if [[ $input == "Y" || $input == "y" ]]; then
-        echo "Changing the remove Mdm Profile "
+        echo "Creating new user..."
       newUser
 else
-        echo " No profile created"
+        echo "Continuing setup..."
 fi
 
 prefSet(){
@@ -196,7 +196,6 @@ fi
 
 appSet(){
   cd /Applications
-
   sudo rm -rif /Applications/Microsoft\ Excel.app /Applications/Microsoft\ OneNote.app /Applications/Microsoft\ Outlook.app /Applications/Microsoft\ PowerPoint.app /Applications/Microsoft\ Silverlight /Applications/Microsoft\ Word.app
   ## sudo rm -rif /Applications/Adobe\ Acrobat\ DC /Applications/Adobe\ Bridge\ CC\ 2018 /Applications/Adobe\ Creative\ Cloud /Applications/Adobe\ Illustrator\ CC\ 2018 /Applications/Adobe\ InDesign\ CC\ 2018 /Applications/Adobe\ Lightroom\ CC /Applications/Adobe\ Media\ Encoder\ CC\ 2018 /Applications/Adobe\ Photoshop\ CC\ 2018
   ## sudo rm -rif /Applications/Adobe\ After\ Effects\ CC\ 2019 /Applications/Adobe\ Audition\ CC\ 2019 /Applications/Adobe\ Bridge\ CC\ 2019 /Applications/Adobe\ Illustrator\ CC\ 2019 /Applications/Adobe\ InDesign\ CC\ 2019 /Applications/Adobe\ Lightroom\ Classic /Applications/Adobe\ Media\ Encoder\ CC\ 2019 /Applications/Adobe\ Photoshop\ CC\ 2019 /Applications/Adobe\ Premiere\ Pro\ CC\ 2019
@@ -211,8 +210,8 @@ appSet(){
   sudo installer -pkg /Applications/Microsoft_Office_16.31.19111002_Installer.pkg -target /
   sudo rm -rif /Applications/Microsoft_Office_16.31.19111002_Installer.pkg
 
-  curl -o /applications/Microsoft_Office_2019_VL_Serializer.pkg https://gist.githubusercontent.com/zthxxx/9ddc171d00df98cbf8b4b0d8469ce90a/raw/Microsoft_Office_2019_VL_Serializer.pkg && sudo installer -pkg /Applications/Microsoft_Office_2019_VL_Serializer.pkg -target /
-
+  curl -o /Applications/Microsoft_Office_2019_VL_Serializer.pkg https://gist.githubusercontent.com/zthxxx/9ddc171d00df98cbf8b4b0d8469ce90a/raw/Microsoft_Office_2019_VL_Serializer.pkg
+  sudo installer -pkg /Applications/Microsoft_Office_2019_VL_Serializer.pkg -target /
   #sudo rm -rif /Applications/Microsoft_Office_2019_VL_Serializer.pkg
 
   curl -o /Applications/atom-mac.zip  https://atom-installer.github.com/v1.41.0/atom-mac.zip?s=1571754162&ext=.zip && sudo unzip /Applications/atom-mac.zip
@@ -234,11 +233,10 @@ else
         echo "Leaving existing applications"
 fi
 
-
-
-# ask for admin password up front
-# sudo -v
-
-
-
-osascript -e 'tell app "System Events" to log out'
+echo "Do want to logout? [Y,N]"
+read input
+if [[ $input == "Y" || $input == "y" ]]; then
+        osascript -e 'tell app "System Events" to log out'
+else
+        echo "Setup is complete. Please remember to Log-out....."
+fi
