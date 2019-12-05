@@ -240,3 +240,11 @@ if [[ $input == "Y" || $input == "y" ]]; then
 else
         echo "Setup is complete. Please remember to Log-out....."
 fi
+
+echo "Do want to update computer? [Y,N]"
+read input
+if [[ $input == "Y" || $input == "y" ]]; then
+        sudo systemupdate -i -a -R
+else
+        echo "Setup is complete. Please remember to Log-out....."
+fi
